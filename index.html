@@ -30,7 +30,7 @@
       padding: 15px;
       border-radius: 10px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      width: 127px;
+      width: 128px;
     }
     select, textarea {
       width: 100%;
@@ -43,7 +43,7 @@
       gap: 10px;
     }
     .qty-controls button {
-      background: #f7043f;
+      background: #ff7043;
       color: white;
       border: none;
       width: 30px;
@@ -76,7 +76,7 @@
       position: fixed;
       top: 20px;
       right: 20px;
-      background: #f7043f;
+      background: #ff7043;
       color: white;
       padding: 10px 15px;
       border-radius: 8px;
@@ -87,10 +87,46 @@
     .notif.show {
       opacity: 1;
     }
+    .btn-kirim {
+  background: #ff7043; /* warna hijau WhatsApp */
+  color: ff7043;
+  font-weight: bold;
+  padding: 16px 24px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  cursor: pointer;
+  margin-top: 15px;
+}
+.btn-kirim:hover {
+  background: white;
+}
+
   </style>
 </head>
 <body>
-<img src="https://i.ibb.co.com/1tg1cXmB/Oranye-Merah-Minimalis-Warung-Makan-Business-Card-20250505-190234-0000.jpg" alt="Ikan" style="width:9cm; height:9cm; display:block; margin:auto;" />
+<a href="https://www.instagram.com/makmurhidayat2404?igsh=MTRwNGk1NGNmY25scg==" target="_blank" 
+   style="
+     position: fixed;
+     top: 5px;
+     right: 27px;
+     z-index: 999;
+     text-decoration: none;
+   ">
+  <h2 style="
+    color: #ff7043; 
+    margin: 0; 
+    font-size: 18px; 
+    transition: color 0.3s;
+  "
+  onmouseover="this.style.color='#ff5722'" 
+  onmouseout="this.style.color='#ff7043'">
+    Warung Lainnya
+  </h2>
+</a>
+<img src="https://i.ibb.co.com/1tg1cXmB/Oranye-Merah-Minimalis-Warung-Makan-Business-Card-20250505-190234-0000.jpg" alt="Ikan" 
+style="width:100%; height:100%; display:block; margin:auto;" />
 
   <div id="statusBar" class="status-bar">TUTUP</div>
   <div id="notif" class="notif"></div>
@@ -100,19 +136,23 @@
     <div class="card">
       <h3>Makanan</h3>
       <select id="foodSelect">
-        <option value="">Pilih Menu</option>
-        <option value="menu1-10000">Menu1 - 10.000</option>
-        <option value="menu2-11000">Menu2 - 11.000</option>
+
+        <option value="Mie Pedas Dower-12000">Mie Pedas Dower - 12.000</option>
       </select>
       <select id="foodExtra" multiple>
-        <option value="T1-3000">T1 - 3.000</option>
-        <option value="T2-4000">T2 - 4.000</option>
+        <option value="Tanpa Topping-0">Tanpa Topping - 0</option>
+        <option value="Telur Matasapi-4000">Telur Matasapi - 4.000</option>
+        <option value="Telur Dadar-4000">Telur Dadar - 4.000</option>
+        <option value="Sosis-4000">Sosis - 4.000</option>
+        <option value="Bakso-4000">Bakso - 4.000</option>
       </select>
       <select id="foodOption">
-        <option value="">Pilih Opsi</option>
-        <option value="Dingin">Dingin</option>
-        <option value="Hangat">Hangat</option>
-        <option value="Kecil">Kecil</option>
+        <option value="">Pilih Level Pedas</option>
+        <option value="Original">Original</option>
+        <option value="Level Selow">Level Selow</option>
+        <option value="Level Lumayan">Lumayan</option>
+        <option value="Level Maximal">Maximal</option>
+
       </select>
       <div class="qty-controls">
         <button onclick="updateQty('food', -1)">-</button>
@@ -129,17 +169,27 @@
       <h3>Minuman</h3>
       <select id="drinkSelect">
         <option value="">Pilih Menu</option>
-        <option value="menuA-10000">MenuA - 10.000</option>
-        <option value="menuB-11000">MenuB - 11.000</option>
+        <option value="Milkshake VANILA Original-13000">Milkshake VANILA Original - 13.000</option>
+        <option value="Milkshake VANILA LATE -13000">Milkshake VANILA LATE- 13.000</option>
+        <option value="Milkshake CHOCO CARAMEL -13000">Milkshake CHOCO CARAMEL- 13.000</option>
+        <option value="Milkshake CHOCO OREO -13000">Milkshake CHOCO OREO - 13.000</option>
+        <option value="Milkshake MANGGA -13000">Milkshake MANGGA- 13.000</option>
+         <option value="Milkshake TARO -13000">Milkshake TARO- 13.000</option>
+         <option value="Milkshake TIRAMISU -13000">Milkshake TIRAMISU- 13.000</option>
+         <option value="Milkshake CAPOUCINO -13000">Milkshake CAPPUCINO- 13.000</option>
+         <option value="LEMONTEA JUMBO -10000">LEMONTEA JUMBO- 10.000</option>
       </select>
+
+
       <select id="drinkExtra" multiple>
-        <option value="TA-3000">TA - 3.000</option>
-        <option value="TB-4000">TB - 4.000</option>
+        <option value="Pakai BOBA-0">Pakai BOBA - 0</option>
+        <option value="Tanpa BOBA-0">Tanpa BOBA -0</option>
+        
       </select>
       <select id="drinkOption">
         <option value="">Pilih Opsi</option>
-        <option value="Hangat">Hangat</option>
-        <option value="Menengah">Menengah</option>
+        <option value="Dingin ">Dingin</option>
+        <option value="Hangat (Khusus Lemontea saja)">Hangat (Khusus Lemontea saja)</option>
       </select>
       <div class="qty-controls">
         <button onclick="updateQty('drink', -1)">-</button>
@@ -157,20 +207,48 @@
     <h3>Keranjang</h3>
     <div id="cartList"></div>
     <div>Total Pesanan: <span id="cartTotal">0</span></div>
+
     <select id="lokasiAntar" onchange="updateOngkir()">
+
       <option value="">Pilih Lokasi Antar</option>
-      <option value="KM 9-6000">KM 9 - 6.000</option>
-      <option value="KM 8-6000">KM 8 - 6.000</option>
+
+      <option value="Kilometer-0 9-15000">Kilometer-0 - 15.000</option>
+
+      <option value="Kilometer-1-14000">Kilometer-1 - 14.000</option>
+
+      <option value="Kilometer-2-12000">Kilometer-2 - 12.000</option>
+
+      <option value="Kilometer-3 9-11000">Kilometer-3 - 11.000</option>
+
+      <option value="Kilometer-4-10000">Kilometer-4 - 10.000</option>
+
+      <option value="Mapaddegat Bawah-10000">Mapaddegat Bawah - 10.000</option>
+
+       <option value="Kilometer-5 9-8000">Kilometer-5 - 8.000</option>
+
+      <option value="Kilometer-6-7000">Kilometer-6 - 7.000</option>
+
+      <option value="SP2 Setelah Perusda dst-8000">SP2 Setelah Perusda dst - 8.000</option>
+
+      <option value="Kilometer-7-6000">Kilometer-7 - 6.000</option>
+
+      <option value="Kilometer-8 9-6000">Kilometer-8 - 6.000</option>
+
+      <option value="Kilometer-9-6000">Kilometer-9 - 6.000</option>
+
+      <option value="Kilometer-10 & SP3 Sekitarnya - 7000">Kilometer-10 & SP3 Sekitarnya - 7.000</option>
+
+
     </select>
     <div>Total + Ongkir: <span id="totalPlusOngkir">0</span></div>
-    <textarea id="alamatDetail" placeholder="Alamat lengkap: gang, rumah, gedung..."></textarea>
-    <button class="btn-orange" onclick="checkout()">====KIRIM PESANAN KE WHATSAPP ADMIN📤====Pastikan Chatmu terkirim ke Admin yah</button>
-  </div>
-
+    <textarea id="alamatDetail" placeholder="detail alamat wajib di isi..."></textarea>
+    <button class="btn-kirim" onclick="checkout()">
+  KIRIM PESANAN KE WHATSAPP ADMIN
+</button>
   <script>
     let cart = [];
     let ongkir = 0;
-    const prices = {"T1": 3000, "T2": 4000, "TA": 3000, "TB": 4000};
+    const prices = {"Tanpa Topping": 0, "Telur Matasapi": 4000, "Telur Dadar": 4000, "Sosis": 4000, "Bakso": 4000,};
 
     function showNotif(msg) {
       const el = document.getElementById("notif");
@@ -226,7 +304,7 @@
       const extras = Array.from(document.getElementById(`${type}Extra`).selectedOptions).map(opt => opt.value.split("-")[0]);
       if (!select) return showNotif("Pilih menu terlebih dahulu.");
       if (extras.length === 0) return showNotif("Pilih minimal satu extra.");
-      if (!option) return showNotif("Pilih satu opsi.");
+      if (!option) return showNotif("Pilih level Pedas.");
 
       const [name, price] = select.split("-");
       const qty = parseInt(document.getElementById(`${type}Qty`).textContent);
@@ -309,7 +387,7 @@
       msg += `Total: ${total.toLocaleString("id-ID")}%0A`;
       msg += `Ongkir (${lokasiTxt}): ${ongkir.toLocaleString("id-ID")}%0A`;
       msg += `*Total Bayar: ${(total + ongkir).toLocaleString("id-ID")}*%0A%0A`;
-      msg += `Alamat: ${alamat}`;
+      msg += `*Detail Alamat: ${alamat}*`;
 
       const waLink = `https://wa.me/6285266610522?text=${msg}`;
       window.open(waLink, '_blank');
