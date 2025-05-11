@@ -34,7 +34,7 @@
     </div>
 
     <div class="text-center mb-4">
-      <a href="https://sifood.online" target="_blank" class="blink font-bold text-blue-600 text-lg">
+      <a href="https://sifood.online" target="_blank" class="blink font-bold text-red-600 text-lg">
         LIHAT WARUNG LAINNYA
       </a>
     </div>
@@ -203,6 +203,9 @@
           item.qty = 1;
           item.toppingDipilih = [];
           item.catatan = '';
+
+          // Notifikasi berhasil
+          this.showNotif('Berhasil menambahkan item ke keranjang.');
         },
         hapusItem(i) {
           this.keranjang.splice(i, 1);
@@ -213,14 +216,14 @@
             return;
           }
           let pesan = '*PESANAN BARU - WARUNG SUTAN*\n\nDetail Pesanan:';
-this.keranjang.forEach((item, i) => {
-  pesan += `\n${i + 1}. ${item.nama}\nQty: ${item.qty}\nTopping: ${item.toppingDipilih.map(t => t.nama).join(', ') || '-'}\nCatatan: ${item.catatan || '-'}\nSubtotal: Rp${this.hitungSubtotal(item).toLocaleString()}\n`;
-});
-pesan += '\n----------------------------';
-pesan += `\n*Total Pesanan:* Rp${this.totalHarga.toLocaleString()}`;
-pesan += `\n*Ongkir (${this.lokasi}):* Rp${this.ongkirTerpilih.toLocaleString()}`;
-pesan += `\n*Total Bayar:* Rp${(this.totalHarga + this.ongkirTerpilih).toLocaleString()}`;
-pesan += `\n\n*Alamat Pengantaran:*\n${this.alamat}\n\nTerima kasih atas pesanannya di sifood.online .\nSilakan tunggu konfirmasi dari kami.`;
+          this.keranjang.forEach((item, i) => {
+            pesan += `\n${i + 1}. ${item.nama}\nQty: ${item.qty}\nTopping: ${item.toppingDipilih.map(t => t.nama).join(', ') || '-'}\nCatatan: ${item.catatan || '-'}\nSubtotal: Rp${this.hitungSubtotal(item).toLocaleString()}\n`;
+          });
+          pesan += '\n----------------------------';
+          pesan += `\n*Total Pesanan:* Rp${this.totalHarga.toLocaleString()}`;
+          pesan += `\n*Ongkir (${this.lokasi}):* Rp${this.ongkirTerpilih.toLocaleString()}`;
+          pesan += `\n*Total Bayar:* Rp${(this.totalHarga + this.ongkirTerpilih).toLocaleString()}`;
+          pesan += `\n\n*Alamat Pengantaran:*\n${this.alamat}\n\nTerima kasih atas pesanannya di sifood.online .\nSilakan tunggu konfirmasi dari kami.`;
           window.open(`https://wa.me/6285266610522?text=${encodeURIComponent(pesan)}`, '_blank');
         },
         showNotif(pesan) {
