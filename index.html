@@ -325,7 +325,7 @@
             this.showNotif('Pilih lokasi dan isi detail alamat.');
             return;
           }
-          let pesan = '*PESANAN BARU - WARUNG SUTAN*\n\nDetail Pesanan:';
+          let pesan = '*PESANAN BARU - WARUNG SUTAN*\nWaktu: ${waktu}\n\nDetail Pesanan:';
           this.keranjang.forEach((item, i) => {
             pesan += `\n${i + 1}. ${item.nama}\nQty: ${item.qty}\nTopping: ${item.toppingDipilih.map(t => t.nama).join(', ') || '-'}\nCatatan: ${item.catatan || '-'}\nSubtotal: Rp${this.hitungSubtotal(item).toLocaleString()}\n`;
           });
