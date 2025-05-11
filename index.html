@@ -3,311 +3,232 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>WARUNG SUTAN</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+  <title>Warung Sutan</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
-    .fade-enter-active, .fade-leave-active {
-      transition: opacity 0.5s ease;
-    }
-    .fade-enter, .fade-leave-to {
-      opacity: 0;
-    }
-    .blink {
-      animation: blink 1s infinite;
-      color: #ff7043;
-    }
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
+    .blurred { filter: blur(2px); pointer-events: none; opacity: 0.5; }
+    .blink { animation: blink-animation 1s steps(2, start) infinite; }
+    @keyframes blink-animation { to { visibility: hidden; } }
+    .notif {
+      position: fixed;
+      top: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #ff7043;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      z-index: 50;
     }
   </style>
 </head>
-<body>
-<div id="app" class="p-4 max-w-4xl mx-auto relative">
-  <!-- Tulisan Berkedip Freezee WARUNG LAINNYA -->
-  <div class="text-center mb-4">
-    <a href="https://sifood.online" target="_blank" class="blink text-lg font-bold">LIHAT WARUNG LAINNYA</a>
-  </div>
+<body class="bg-gray-100 min-h-screen p-4">
+  <div id="app">
+    <div v-if="notif" class="notif">{{ notif }}</div>
 
-  <!-- Notifikasi -->
-  <transition name="fade">
-    <div v-if="notif.message" :class="['fixed top-4 left-1/2 transform -translate-x-1/2 z-50 px-4 py-2 rounded shadow text-white', notif.type === 'error' ? 'bg-red-500' : 'bg-green-500']">
-      {{ notif.message }}
+    <div class="text-center mb-4">
+      <h1 class="text-3xl font-bold">Warung Sutan</h1>
+      <p class="text-sm text-gray-600">Jam buka: 07.00 - 21.00 WIB</p>
+      <p v-if="!isOpen" class="text-red-500 font-semibold">Tutup - Pesanan nonaktif</p>
     </div>
-  </transition>
 
-  <!-- Overlay jika toko tutup -->
-  <div v-if="!isOpen" class="absolute inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center z-50">
-    <div class="text-center">
-      <h1 class="text-white text-4xl font-bold mb-2">Toko sedang tutup</h1>
-      <p class="text-white">Jam operasional: 00:01 - 21:00</p>
-<p class="text-white">Hari buka: Senin - minggu</p>
+    <div class="text-center mb-4">
+      <a href="https://sifood.online" target="_blank" class="blink font-bold text-blue-600 text-lg">
+        LIHAT WARUNG LAINNYA
+      </a>
     </div>
-  </div>
 
-  <!-- Judul -->
-  <h1 class="text-2xl font-bold mb-4">WARUNG SUTAN <span class="ml-2 text-green-600" v-if="isOpen">BUKA JAM 11:00-21:00</span></h1>
+    <h2 class="text-xl font-semibold mb-2">Makanan</h2>
+    <div :class="{ blurred: !isOpen }" class="grid grid-cols-2 gap-4 mb-4">
+      <div v-for="(item, index) in makanan" :key="index" class="bg-white rounded-lg shadow-md p-2"
+        :class="{ 'opacity-50 pointer-events-none': !item.aktif }">
+        <img :src="item.gambar" alt="makanan" class="w-full h-24 object-cover rounded">
+        <h3 class="font-bold mt-2">{{ item.nama }}</h3>
+        <p class="text-sm text-gray-600 mb-1">Rp{{ item.harga.toLocaleString() }}</p>
 
-  <!-- Makanan -->
-  <h2 class="text-xl font-semibold mb-2">Makanan</h2>
-  <div class="grid grid-cols-2 gap-4 mb-4">
-    <div v-for="item in makanan" :key="item.nama" class="border rounded-lg p-2 shadow">
-      <img :src="item.gambar" alt="menu" class="w-full h-32 object-cover rounded" />
-      <h3 class="font-bold">{{ item.nama }}</h3>
-      <p class="text-sm text-gray-600">Rp{{ item.harga }}</p>
-      <label class="block mt-1 text-sm">Topping <span class="text-red-500">*</span>:</label>
-      <select v-model="item.toppingDipilih" multiple class="w-full border rounded p-1 text-sm">
-        <option v-for="top in item.topping" :value="top">{{ top.nama }} - Rp{{ top.harga }}</option>
-      </select>
-      <div class="flex justify-between items-center mt-2">
-        <div class="flex items-center space-x-2">
-          <button @click="kurangQty(item)" class="px-2 bg-gray-200">-</button>
-          <span>{{ item.qty }}</span>
-          <button @click="tambahQty(item)" class="px-2 bg-gray-200">+</button>
+        <div class="flex items-center justify-between mb-1">
+          <div class="flex items-center">
+            <button @click="item.qty = Math.max(1, item.qty - 1)" class="px-2 rounded" style="background:#ff7043;color:white">-</button>
+            <span class="mx-2">{{ item.qty }}</span>
+            <button @click="item.qty++" class="px-2 rounded" style="background:#ff7043;color:white">+</button>
+          </div>
+          <p class="text-sm font-medium">Subtotal: Rp{{ hitungSubtotal(item).toLocaleString() }}</p>
         </div>
-        <span class="text-sm font-bold">Rp{{ getHargaItem(item).toLocaleString() }}</span>
-      </div>
-      <label class="block text-sm mt-1">Catatan (opsional):</label>
-      <textarea v-model="item.catatan" rows="2" class="w-full border rounded p-1 text-sm" placeholder="Tanpa sambal, pedas, dll"></textarea>
-      <button @click="masukkanKeranjang(item)" class="mt-2 bg-green-500 text-white px-2 py-1 rounded text-sm w-full">Masukkan ke Keranjang</button>
-      <p v-if="item.error" class="text-red-500 text-xs mt-1">{{ item.error }}</p>
-    </div>
-  </div>
 
-  <!-- Minuman -->
-  <h2 class="text-xl font-semibold mb-2">Minuman</h2>
-  <div class="grid grid-cols-2 gap-4 mb-4">
-    <div v-for="item in minuman" :key="item.nama" class="border rounded-lg p-2 shadow">
-      <img :src="item.gambar" alt="menu" class="w-full h-32 object-cover rounded" />
-      <h3 class="font-bold">{{ item.nama }}</h3>
-      <p class="text-sm text-gray-600">Rp{{ item.harga }}</p>
-      <label class="block text-sm mt-1">Opsi <span class="text-red-500">*</span>:</label>
-      <select v-model="item.opsiDipilih" class="w-full border rounded p-1 text-sm">
-        <option disabled value="">Pilih Opsi</option>
-        <option v-for="opsi in item.opsi" :value="opsi">{{ opsi }}</option>
-      </select>
-      <div class="flex justify-between items-center mt-2">
-        <div class="flex items-center space-x-2">
-          <button @click="kurangQty(item)" class="px-2 bg-gray-200">-</button>
-          <span>{{ item.qty }}</span>
-          <button @click="tambahQty(item)" class="px-2 bg-gray-200">+</button>
-        </div>
-        <span class="text-sm font-bold">Rp{{ (item.harga * item.qty).toLocaleString() }}</span>
-      </div>
-      <label class="block text-sm mt-1">Catatan (opsional):</label>
-      <textarea v-model="item.catatan" rows="2" class="w-full border rounded p-1 text-sm" placeholder="Tanpa es, kurang manis, dll"></textarea>
-      <button @click="masukkanKeranjang(item)" class="mt-2 bg-green-500 text-white px-2 py-1 rounded text-sm w-full">Masukkan ke Keranjang</button>
-      <p v-if="item.error" class="text-red-500 text-xs mt-1">{{ item.error }}</p>
-    </div>
-  </div>
+        <label class="block text-sm font-medium">Topping:</label>
+        <select v-model="item.toppingDipilih" multiple class="w-full border rounded p-1 text-sm mb-1">
+          <option v-for="t in item.topping" :key="t.nama" :value="t">{{ t.nama }} (+Rp{{ t.harga.toLocaleString() }})</option>
+        </select>
 
- <!-- Keranjang -->
-  <div class="mt-4">
+        <textarea v-model="item.catatan" placeholder="Catatan (opsional)" class="w-full border rounded p-1 text-sm mb-2"></textarea>
+
+        <button @click="tambahKeKeranjang(item)" class="w-full py-1 rounded hover:opacity-90" style="background:#ff7043;color:white">
+          Tambah ke Keranjang
+        </button>
+      </div>
+    </div>
+
     <h2 class="text-xl font-semibold mb-2">Keranjang</h2>
-    <ul>
-      <li v-for="(item, index) in keranjang" :key="index" class="border-b py-2">
-        <p class="font-bold">{{ item.nama }} x{{ item.qty }}</p>
+    <div class="bg-white rounded-lg shadow-md p-4 mb-4">
+      <div v-if="keranjang.length === 0" class="text-gray-500">Belum ada pesanan.</div>
+      <div v-for="(item, i) in keranjang" :key="i" class="mb-4 border-b pb-2">
+        <div class="flex justify-between items-center">
+          <div>
+            <h4 class="font-semibold">{{ item.nama }}</h4>
+            <p class="text-sm text-gray-600">Qty: {{ item.qty }}</p>
+            <p class="text-sm text-gray-600">Topping: {{ item.toppingDipilih.map(t => t.nama).join(', ') }}</p>
+            <p class="text-sm text-gray-600">Catatan: {{ item.catatan || '-' }}</p>
+          </div>
+          <div class="text-right">
+            <p class="font-semibold">Rp{{ hitungSubtotal(item).toLocaleString() }}</p>
+            <button @click="hapusItem(i)" class="text-red-500 text-sm">Hapus</button>
+          </div>
+        </div>
+      </div>
+      <div class="text-right font-bold mt-2">Total Pesanan: Rp{{ totalHarga.toLocaleString() }}</div>
+    </div>
 
-        <p v-if="item.topping.length">Topping: {{ item.topping.map(t => t.nama).join(', ') }}</p>
-        <p v-if="item.opsi">Opsi: {{ item.opsi }}</p>
-<p class="text-sm text-gray-700">Subtotal: Rp{{ getHargaItem(item).toLocaleString() }}</p>
-        <p v-if="item.catatan">Catatan: {{ item.catatan }}</p>
-        <button @click="hapusItem(index)" class="text-red-500 text-sm mt-1">Hapus</button>
-      </li>
-    </ul>
-    <p class="mt-2 font-semibold">Total: Rp{{ totalPesanan.toLocaleString() }}</p>
-    <label class="block mt-2">Lokasi Antar <span class="text-red-500">*</span>:</label>
-    <select v-model="lokasiDipilih" class="border p-1 rounded w-full">
-      <option disabled value="">Pilih Lokasi</option>
-      <option v-for="lok in lokasiAntar" :value="lok">{{ lok.nama }} - Rp{{ lok.ongkir }}</option>
-    </select>
-    <label class="block mt-2">Alamat Lengkap <span class="text-red-500">*</span>:</label>
-    <textarea v-model="alamatLengkap" class="border rounded w-full p-2" rows="2" placeholder="Contoh: Gg Mawar No 17, pagar hijau, atas nama Budi"></textarea>
-    <p class="mt-2 font-bold">Total + Ongkir: Rp{{ (totalPesanan + (lokasiDipilih ? lokasiDipilih.ongkir : 0)).toLocaleString() }}</p>
-    <button :disabled="!bisaCheckout" @click="checkout" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50 w-full">
-      Kirim ke WhatsApp Admin
+    <div class="mb-2">
+      <label class="block font-medium mb-1">Lokasi Antar:</label>
+      <select v-model="lokasi" class="w-full border rounded p-2 text-sm">
+        <option disabled value="">-- Pilih Lokasi --</option>
+        <option v-for="(ongkir, lokasi) in lokasiOngkir" :value="lokasi">
+          {{ lokasi }} - Rp{{ ongkir.toLocaleString() }}
+        </option>
+      </select>
+    </div>
+
+    <div class="mb-4">
+      <label class="block font-medium mb-1">Detail Alamat:</label>
+      <input v-model="alamat" type="text" placeholder="Contoh: Belakang SD KM2" class="w-full border rounded p-2 text-sm">
+    </div>
+
+    <div class="text-right font-bold mb-4">
+      Total + Ongkir: Rp{{ (totalHarga + ongkirTerpilih).toLocaleString() }}
+    </div>
+
+    <button :disabled="keranjang.length === 0 || !isOpen" @click="kirimPesanan"
+      class="w-full py-2 rounded hover:opacity-90 disabled:opacity-50" style="background:#ff7043;color:white">
+      Kirim Pesanan via WhatsApp
     </button>
   </div>
-</div>
-<script>
-new Vue({
-  el: '#app',
-  data: {
-    makanan: [],
-    minuman: [],
-    keranjang: [],
-    lokasiAntar: [
-      { nama: 'KM 0', ongkir: 13000 }, { nama: 'KM 2', ongkir: 11000 },
-      { nama: 'KM 3', ongkir: 10000 }, { nama: 'KM 4', ongkir: 9000 },
-      { nama: 'Mapaddegat bagian Bawah dst', ongkir: 10000 }, { nama: 'KM 5', ongkir: 8000 },
-      { nama: 'KM 6', ongkir: 7000 }, { nama: 'KM 7', ongkir: 6000 },
-      { nama: 'KM 8', ongkir: 5000 }, { nama: 'KM 9', ongkir: 5000 },
-      { nama: 'KM 10', ongkir: 6000 }, { nama: 'SP2 Blok M dst ', ongkir: 7000 }
-    ],
-    lokasiDipilih: null,
-    alamatLengkap: '',
-    isOpen: false,
-    notif: { message: '', type: '' }
-  },
-  computed: {
-    totalPesanan() {
-      return this.keranjang.reduce((acc, item) => {
-        const toppingTotal = item.topping.reduce((sum, t) => sum + t.harga, 0);
-        return acc + (item.harga + toppingTotal) * item.qty;
-      }, 0);
-    },
-    bisaCheckout() {
-      return this.keranjang.length > 0 && this.lokasiDipilih && this.alamatLengkap.trim() !== '';
-    }
-  },
-  created() {
-    const jam = new Date().getHours();
-    this.isOpen = jam >= 0 && jam < 21;
 
-    const gambarMakanan = [
-      'https://i.ibb.co.com/KccY6t5Y/Properti-Sifood-20250507-215020-0000.jpg',
-      'https://linkgambar.com/mie2.jpg',
-      'https://linkgambar.com/mie3.jpg',
-      'https://i.ibb.co.com/KccY6t5Y/Properti-Sifood-20250507-215020-0000.jpg'
-    ];
-    const topping = [
-      { nama: 'Telur Matasapi', harga: 4000 },
-      { nama: 'Telur Dadar', harga: 4000 },
-      { nama: 'Sosis', harga: 4000 },
-      { nama: 'Bakso', harga: 4000 }
-    ];
-    const opsi = ['pakai Boba', 'Tanpa Boba'];
-    this.makanan = [
-      'Mie pedas dower Original',
-      'Mie pedas dower level Selow',
-      'Mie pedas dower level lumayan',
-      'Mie pedas dower level maximal'
-    ].map((nama, i) => ({
-      nama,
-      harga: 12000,
-      gambar: gambarMakanan[i],
-      topping,
-      toppingDipilih: [],
-      qty: 1,
-      catatan: '',
-      error: ''
-    }));
-    const gambarMinuman = [
-      'https://linkgambar.com/caramel.jpg',
-      'https://linkgambar.com/taro.jpg',
-      'https://linkgambar.com/vanila.jpg',
-      'https://linkgambar.com/vanila-latte.jpg',
-      'https://i.ibb.co.com/KccY6t5Y/Properti-Sifood-20250507-215020-0000.jpg',
-      'https://linkgambar.com/mangga.jpg',
-      'https://linkgambar.com/lemontea.jpg'
-    ];
-    this.minuman = [
-      'Milkshake Boba Caramel',
-      'Milkshake Boba Taro',
-      'Milkshake Boba vanila',
-      'Milkshake Boba vanila late',
-      'Milkshake Boba cappucino',
-      'Milkshake Boba Mangga',
-      'Lemon Tea'
-    ].map((nama, i) => ({
-      nama,
-      harga: nama === 'Lemon Tea' ? 10000 : 13000,
-      gambar: gambarMinuman[i],
-      opsi: nama === 'Lemon Tea' ? ['Dingin', 'Hangat'] : opsi,
-      opsiDipilih: '',
-      qty: 1,
-      catatan: '',
-      error: ''
-    }));
-  },
-  methods: {
-    tambahQty(item) { item.qty++; },
-    kurangQty(item) { if (item.qty > 1) item.qty--; },
-    getHargaItem(item) {
-  const topping = item.toppingDipilih || item.topping || [];
-  const toppingTotal = topping.reduce((sum, t) => sum + t.harga, 0);
-  return (item.harga + toppingTotal) * item.qty;
-},
-    showNotif(message, type = 'success') {
-      this.notif = { message, type };
-      setTimeout(() => { this.notif.message = ''; }, 3000);
-    },
-    masukkanKeranjang(item) {
-      item.error = '';
-      if ((item.topping && item.toppingDipilih.length === 0) || (item.opsi && !item.opsiDipilih)) {
-        item.error = 'Wajib pilih topping atau opsi';
-        this.showNotif(item.error, 'error');
-        return;
-      }
-      const toppingNama = item.toppingDipilih?.map(t => t.nama).sort().join(',') || '';
-      const opsi = item.opsiDipilih || '';
-      const itemKey = `${item.nama}|${toppingNama}|${opsi}`;
-      const sudahAda = this.keranjang.some(i => {
-        const key = `${i.nama}|${i.topping.map(t => t.nama).sort().join(',')}|${i.opsi || ''}`;
-        return key === itemKey;
-      });
-      if (sudahAda) {
-        item.error = 'Menu dengan pilihan ini sudah ada di keranjang';
-        this.showNotif(item.error, 'error');
-        return;
-      }
-      this.keranjang.push({
-        nama: item.nama,
-        qty: item.qty,
-        harga: item.harga,
-        topping: item.toppingDipilih ? JSON.parse(JSON.stringify(item.toppingDipilih)) : [],
-        opsi,
-        catatan: item.catatan.trim()
-      });
-      item.qty = 1;
-      if (item.topping) item.toppingDipilih = [];
-      if (item.opsi) item.opsiDipilih = '';
-      item.catatan = '';
-      this.showNotif('Item berhasil dimasukkan ke keranjang');
-    },
-    hapusItem(index) {
-      this.keranjang.splice(index, 1);
-    },
-    checkout() {
-  if (!this.bisaCheckout) {
-    if (this.keranjang.length === 0) {
-      this.showNotif('Keranjang masih kosong!', 'error');
-    } else if (!this.lokasiDipilih) {
-      this.showNotif('Silakan pilih lokasi antar!', 'error');
-    } else if (this.alamatLengkap.trim() === '') {
-      this.showNotif('Silakan isi alamat lengkap!', 'error');
-    } else {
-      this.showNotif('Lengkapi semua data terlebih dahulu!', 'error');
-    }
-    return;
-  }
-
-  const now = new Date();
-  const waktu = `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
-  const pesan = `*Halo Admin... Proses Orderanku di WARUNG SUTAN:*%0A` +
-`*Waktu: ${waktu}*%0A%0A` +
-`====================%0A `+
-  this.keranjang.map(i => {
-    const toppingList = i.topping.length ? 'Topping: ' + i.topping.map(t => t.nama).join(', ') + '%0A' : '';
-    const opsiText = i.opsi ? 'Opsi: ' + i.opsi + '%0A' : '';
-    const catatanText = i.catatan ? 'Catatan: ' + i.catatan + '%0A' : '';
-    const subtotal = (i.harga + i.topping.reduce((sum, t) => sum + t.harga, 0)) * i.qty;
-    return `*${i.nama}* x ${i.qty} Porsi%0A${toppingList}${opsiText}${catatanText}Subtotal: Rp${subtotal.toLocaleString()}%0A`;
-  }).join('%0A') +
-`%0A====================%0A` +
-`*Total Harga:* Rp${this.totalPesanan.toLocaleString()}%0A` +
-`*Ongkir (${this.lokasiDipilih.nama}):* Rp${this.lokasiDipilih.ongkir.toLocaleString()}%0A` +
-`*Total Bayar:* Rp${(this.totalPesanan + this.lokasiDipilih.ongkir).toLocaleString()}%0A` +
-`*Alamat:* ${this.alamatLengkap}%0A%0A`+
-`Terima Kasih telah Belanja di *sifood.online* Hapenya Mohon Stanby yah`;
-
-  const nomorAdmin = '6285266610522';
-  const url = `https://wa.me/${nomorAdmin}?text=${pesan}`;
-  window.open(url, '_blank');
-    }
-  }
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        notif: '',
+        keranjang: [],
+        alamat: '',
+        lokasi: '',
+        lokasiOngkir: { KM1: 13000, KM2: 12000, KM3: 11000, KM4: 10000 },
+        jamBuka: 00,
+        jamTutup: 24,
+        isOpen: true,
+        makanan: [
+          {
+            nama: 'Mie Original',
+            harga: 12000,
+            gambar: 'https://source.unsplash.com/featured/?noodles',
+            topping: [{ nama: 'Telur', harga: 2000 }, { nama: 'Bakso', harga: 3000 }],
+            toppingDipilih: [],
+            qty: 1,
+            catatan: '',
+            aktif: false
+          },
+          {
+            nama: 'Mie Original oke',
+            harga: 12000,
+            gambar: 'https://source.unsplash.com/featured/?noodles',
+            topping: [{ nama: 'Telur', harga: 2000 }, { nama: 'Bakso', harga: 3000 }],
+            toppingDipilih: [],
+            qty: 1,
+            catatan: '',
+            aktif: true
+          },
+          {
+            nama: 'Mie Maximal',
+            harga: 15000,
+            gambar: 'https://source.unsplash.com/featured/?noodle-dish',
+            topping: [{ nama: 'Sayur', harga: 1000 }, { nama: 'Sosis', harga: 2500 }],
+            toppingDipilih: [],
+            qty: 1,
+            catatan: '',
+            aktif: true
+          }
+        ]
+      },
+      computed: {
+        totalHarga() {
+          return this.keranjang.reduce((total, item) => total + this.hitungSubtotal(item), 0);
+        },
+        ongkirTerpilih() {
+          return this.lokasiOngkir[this.lokasi] || 0;
+        }
+      },
+      created() {
+        this.cekJamBuka();
+        setInterval(this.cekJamBuka, 60000);
+      },
+      methods: {
+        cekJamBuka() {
+          const jam = new Date().getHours();
+          this.isOpen = jam >= this.jamBuka && jam < this.jamTutup;
+        },
+        hitungSubtotal(item) {
+          const toppingTotal = item.toppingDipilih.reduce((sum, t) => sum + t.harga, 0);
+          return (item.harga + toppingTotal) * item.qty;
+        },
+        tambahKeKeranjang(item) {
+          if (item.toppingDipilih.length === 0) {
+            this.showNotif('Pilih minimal 1 topping.');
+            return;
+          }
+          const ada = this.keranjang.find(i =>
+            i.nama === item.nama &&
+            JSON.stringify(i.toppingDipilih) === JSON.stringify(item.toppingDipilih)
+          );
+          if (ada) {
+            this.showNotif('Item dengan topping sama sudah ada di keranjang.');
+            return;
+          }
+          this.keranjang.push({
+            nama: item.nama,
+            harga: item.harga,
+            qty: item.qty,
+            toppingDipilih: [...item.toppingDipilih],
+            catatan: item.catatan
+          });
+          item.qty = 1;
+          item.toppingDipilih = [];
+          item.catatan = '';
+        },
+        hapusItem(i) {
+          this.keranjang.splice(i, 1);
+        },
+        kirimPesanan() {
+          if (!this.lokasi || !this.alamat) {
+            this.showNotif('Pilih lokasi dan isi detail alamat.');
+            return;
+          }
+          let pesan = '*PESANAN BARU - WARUNG SUTAN*\n\nDetail Pesanan:';
+this.keranjang.forEach((item, i) => {
+  pesan += `\n${i + 1}. ${item.nama}\nQty: ${item.qty}\nTopping: ${item.toppingDipilih.map(t => t.nama).join(', ') || '-'}\nCatatan: ${item.catatan || '-'}\nSubtotal: Rp${this.hitungSubtotal(item).toLocaleString()}\n`;
 });
-</script>
+pesan += '\n----------------------------';
+pesan += `\n*Total Pesanan:* Rp${this.totalHarga.toLocaleString()}`;
+pesan += `\n*Ongkir (${this.lokasi}):* Rp${this.ongkirTerpilih.toLocaleString()}`;
+pesan += `\n*Total Bayar:* Rp${(this.totalHarga + this.ongkirTerpilih).toLocaleString()}`;
+pesan += `\n\n*Alamat Pengantaran:*\n${this.alamat}\n\nTerima kasih atas pesanannya di sifood.online .\nSilakan tunggu konfirmasi dari kami.`;
+          window.open(`https://wa.me/6285266610522?text=${encodeURIComponent(pesan)}`, '_blank');
+        },
+        showNotif(pesan) {
+          this.notif = pesan;
+          setTimeout(() => this.notif = '', 3000);
+        }
+      }
+    });
+  </script>
 </body>
 </html>
