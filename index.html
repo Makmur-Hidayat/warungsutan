@@ -101,7 +101,7 @@
 
     <div class="mb-4">
       <label class="block font-medium mb-1">Detail Alamat:</label>
-      <input v-model="alamat" type="text" placeholder="Contoh: Belakang SD KM2" class="w-full border rounded p-2 text-sm">
+      <input v-model="alamat" type="text" placeholder="Misal: gang beringin rumah no 3 sebelah kanan KM8" class="w-full border rounded p-2 text-sm">
     </div>
 
     <div class="text-right font-bold mb-4">
@@ -131,7 +131,7 @@
             nama: 'Mie Pedas Dower Original',
             harga: 12000,
             gambar: 'https://source.unsplash.com/featured/?noodles',
-            topping: [{ nama: 'Telur_matasapi', harga: 4000 }, { nama: 'Telur_dadar', harga: 4000 }, { nama: 'Sosis', harga: 4000 }, { nama: 'Bakso', harga: 4000 }],
+            topping: [{ nama: 'Telur_matasapi', harga: 4000 }, { nama: 'Telur_dadar', harga: 4000 }, { nama: 'Sosis', harga: 4000 }, { nama: 'Bakso', harga: 4000 }, { nama: 'Tanpa_Topping', harga: 0 }],
             toppingDipilih: [],
             qty: 1,
             catatan: '',
@@ -141,7 +141,7 @@
             nama: 'Mie Pedas Dower SELOW',
             harga: 12000,
             gambar: 'https://source.unsplash.com/featured/?noodles',
-            topping: [{ nama: 'Telur_matasapi', harga: 4000 }, { nama: 'Telur_dadar', harga: 4000 }, { nama: 'Sosis', harga: 4000 }, { nama: 'Bakso', harga: 4000 }],
+            topping: [{ nama: 'Telur_matasapi', harga: 4000 }, { nama: 'Telur_dadar', harga: 4000 }, { nama: 'Sosis', harga: 4000 }, { nama: 'Bakso', harga: 4000 }, { nama: 'Tanpa_Topping', harga: 0 }],
             toppingDipilih: [],
             qty: 1,
             catatan: '',
@@ -151,7 +151,7 @@
             nama: 'Mie Pedas Dower LUMAYAN',
             harga: 12000,
             gambar: 'https://source.unsplash.com/featured/?noodles',
-            topping: [{ nama: 'Telur_matasapi', harga: 4000 }, { nama: 'Telur_dadar', harga: 4000 }, { nama: 'Sosis', harga: 4000 }, { nama: 'Bakso', harga: 4000 }],
+            topping: [{ nama: 'Telur_matasapi', harga: 4000 }, { nama: 'Telur_dadar', harga: 4000 }, { nama: 'Sosis', harga: 4000 }, { nama: 'Bakso', harga: 4000 }, { nama: 'Tanpa_Topping', harga: 0 }],
             toppingDipilih: [],
             qty: 1,
             catatan: '',
@@ -161,31 +161,111 @@
             nama: 'Mie Pedas Dower MAXIMAL',
             harga: 12000,
             gambar: 'https://source.unsplash.com/featured/?noodles',
-            topping: [{ nama: 'Telur_matasapi', harga: 4000 }, { nama: 'Telur_dadar', harga: 4000 }, { nama: 'Sosis', harga: 4000 }, { nama: 'Bakso', harga: 4000 }],
+            topping: [{ nama: 'Telur_matasapi', harga: 4000 }, { nama: 'Telur_dadar', harga: 4000 }, { nama: 'Sosis', harga: 4000 }, { nama: 'Bakso', harga: 4000 }, { nama: 'Tanpa_Topping', harga: 0 }],
             toppingDipilih: [],
             qty: 1,
             catatan: '',
             aktif: true
           },
           {
-            nama: 'Mie Original oke',
-            harga: 12000,
+            nama: 'Milkshake Boba TARO',
+            harga: 13000,
             gambar: 'https://source.unsplash.com/featured/?noodles',
-            topping: [{ nama: 'Telur', harga: 2000 }, { nama: 'Bakso', harga: 3000 }],
+            topping: [{ nama: 'Pakai_BOBA', harga: 0 }, { nama: 'Tanpa_Boba', harga: 0 }],
             toppingDipilih: [],
             qty: 1,
             catatan: '',
             aktif: true
           },
           {
-            nama: 'Mie Maximal',
-            harga: 15000,
-            gambar: 'https://source.unsplash.com/featured/?noodle-dish',
-            topping: [{ nama: 'Sayur', harga: 1000 }, { nama: 'Sosis', harga: 2500 }],
+            nama: 'Milkshake Boba VANILA LATE',
+            harga: 13000,
+            gambar: 'https://source.unsplash.com/featured/?noodles',
+            topping: [{ nama: 'Pakai_BOBA', harga: 0 }, { nama: 'Tanpa_Boba', harga: 0 }],
             toppingDipilih: [],
             qty: 1,
             catatan: '',
             aktif: true
+          },
+          {
+            nama: 'Milkshake Boba VANILA ORIGINAL',
+            harga: 13000,
+            gambar: 'https://source.unsplash.com/featured/?noodles',
+            topping: [{ nama: 'Pakai_BOBA', harga: 0 }, { nama: 'Tanpa_Boba', harga: 0 }],
+            toppingDipilih: [],
+            qty: 1,
+            catatan: '',
+            aktif: true
+          },
+          {
+            nama: 'Milkshake Boba MANGGA',
+            harga: 13000,
+            gambar: 'https://source.unsplash.com/featured/?noodles',
+            topping: [{ nama: 'Pakai_BOBA', harga: 0 }, { nama: 'Tanpa_Boba', harga: 0 }],
+            toppingDipilih: [],
+            qty: 1,
+            catatan: '',
+            aktif: true
+          },
+          {
+            nama: 'Milkshake Boba TIRAMISU',
+            harga: 13000,
+            gambar: 'https://source.unsplash.com/featured/?noodles',
+            topping: [{ nama: 'Pakai_BOBA', harga: 0 }, { nama: 'Tanpa_Boba', harga: 0 }],
+            toppingDipilih: [],
+            qty: 1,
+            catatan: '',
+            aktif: true
+          },
+          {
+            nama: 'Milkshake Boba CAPPUCINO',
+            harga: 13000,
+            gambar: 'https://source.unsplash.com/featured/?noodles',
+            topping: [{ nama: 'Pakai_BOBA', harga: 0 }, { nama: 'Tanpa_Boba', harga: 0 }],
+            toppingDipilih: [],
+            qty: 1,
+            catatan: '',
+            aktif: false
+          },
+          {
+            nama: 'Milkshake Boba CHOCO CARAMEL',
+            harga: 13000,
+            gambar: 'https://source.unsplash.com/featured/?noodles',
+            topping: [{ nama: 'Pakai_BOBA', harga: 0 }, { nama: 'Tanpa_Boba', harga: 0 }],
+            toppingDipilih: [],
+            qty: 1,
+            catatan: '',
+            aktif: true
+          },
+          {
+            nama: 'Milkshake Boba CHOCO OREO',
+            harga: 13000,
+            gambar: 'https://source.unsplash.com/featured/?noodles',
+            topping: [{ nama: 'Pakai_BOBA', harga: 0 }, { nama: 'Tanpa_Boba', harga: 0 }],
+            toppingDipilih: [],
+            qty: 1,
+            catatan: '',
+            aktif: true
+          },
+          {
+            nama: 'Milkshake Boba RED VELVET',
+            harga: 13000,
+            gambar: 'https://source.unsplash.com/featured/?noodles',
+            topping: [{ nama: 'Pakai_BOBA', harga: 0 }, { nama: 'Tanpa_Boba', harga: 0 }],
+            toppingDipilih: [],
+            qty: 1,
+            catatan: '',
+            aktif: False
+          },
+          {
+            nama: 'Milkshake Boba MATCHA',
+            harga: 13000,
+            gambar: 'https://source.unsplash.com/featured/?noodles',
+            topping: [{ nama: 'Pakai_BOBA', harga: 0 }, { nama: 'Tanpa_Boba', harga: 0 }],
+            toppingDipilih: [],
+            qty: 1,
+            catatan: '',
+            aktif: false
           }
         ]
       },
