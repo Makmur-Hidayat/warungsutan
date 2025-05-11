@@ -1,411 +1,313 @@
-
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Warung Sutan</title>
+  <title>WARUNG SUTAN</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
   <style>
-    body {
-      font-family: sans-serif;
-      padding: 20px;
-      background: #f4f4f4;
+    .fade-enter-active, .fade-leave-active {
+      transition: opacity 0.5s ease;
     }
-    .status-bar {
-      text-align: center;
-      font-weight: bold;
-      padding: 10px;
-      color: white;
-      background: #dc3545;
-      margin-bottom: 20px;
-    }
-    .container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 3px;
-  justify-content: center;
-}
-
-.card {
-  background: white;
-  padding: 15px;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  flex: 1 1 150px;
-  max-width: 150px;
-  box-sizing: border-box;
-}
-    select, textarea {
-      width: 100%;
-      margin: 8px 0;
-      padding: 6px;
-    }
-    .qty-controls {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .qty-controls button {
-      background: #ff7043;
-      color: white;
-      border: none;
-      width: 30px;
-      height: 30px;
-      font-size: 18px;
-      border-radius: 4px;
-    }
-    .cart {
-      margin-top: 30px;
-    }
-    .cart-item {
-      background: white;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 6px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-    }
-    .btn-orange {
-      background: #ff7043;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .btn-orange:hover {
-      background: #e05c35;
-    }
-    .notif {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: red;
-      color: white;
-      padding: 10px 15px;
-      border-radius: 8px;
+    .fade-enter, .fade-leave-to {
       opacity: 0;
-      transition: opacity 0.5s ease-in-out;
-      z-index: 999;
     }
-    .notif.show {
-      opacity: 1;
+    .blink {
+      animation: blink 1s infinite;
+      color: #ff7043;
     }
-    .btn-kirim {
-  background: #ff7043; /* warna hijau WhatsApp */
-  color: ff7043;
-  font-weight: bold;
-  padding: 16px 24px;
-  font-size: 16px;
-  border: none;
-  border-radius: 8px;
-  width: 100%;
-  cursor: pointer;
-  margin-top: 15px;
-}
-.btn-kirim:hover {
-  background: white;
-}
-.alamat-detail {
-  width: 100%;
-  height: 2cm; /* sekitar 1.5 kali dari tinggi select default */
-  margin-top: 8px;
-  padding: 6px;
-  box-sizing: border-box;
-  resize: vertical;
-}
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
   </style>
 </head>
 <body>
-<a href="https://makmur-hidayat.github.io/Sifood-Home/" target="_blank" 
-   style="
-     position: fixed;
-     top: 5px;
-     right: 27px;
-     z-index: 999;
-     text-decoration: none;
-   ">
-  <h2 style="
-    color: #ff7043; 
-    margin: 0; 
-    font-size: 18px; 
-    transition: color 0.3s;
-  "
-  onmouseover="this.style.color='#ff5722'" 
-  onmouseout="this.style.color='#ff7043'">
-    Warung Lainnya
-  </h2>
-</a>
-<img src="https://i.ibb.co.com/qSq6chK/Oranye-Merah-Minimalis-Warung-Makan-Business-Card-20250507-083836-0000.jpg" alt="Ikan" 
-style="width:100%; height:100%; display:block; margin:auto;" />
+<div id="app" class="p-4 max-w-4xl mx-auto relative">
+  <!-- Tulisan Berkedip Freezee WARUNG LAINNYA -->
+  <div class="text-center mb-4">
+    <a href="https://sifood.online" target="_blank" class="blink text-lg font-bold">LIHAT WARUNG LAINNYA</a>
+  </div>
 
-  <div id="statusBar" class="status-bar">TUTUP</div>
-  <div id="notif" class="notif"></div>
-
-  <div class="container">
-    <!-- Makanan -->
-    <div class="card">
-      <h3>Makanan</h3>
-      <select id="foodSelect">
-
-        <option value="Mie Pedas Dower-12000">Mie Pedas Dower - 12.000</option>
-      </select>
-      <select id="foodExtra" multiple>
-        <option value="Tanpa Topping-0">Tanpa Topping - 0</option>
-        <option value="Telur Matasapi-4000">Telur Matasapi - 4.000</option>
-        <option value="Telur Dadar-4000">Telur Dadar - 4.000</option>
-        <option value="Sosis-4000">Sosis - 4.000</option>
-        <option value="Bakso-4000">Bakso - 4.000</option>
-      </select>
-      <select id="foodOption">
-        <option value="">Pilih Level Pedas</option>
-        <option value="Original">Original</option>
-        <option value="Level Selow">Level Selow</option>
-        <option value="Level Lumayan">Lumayan</option>
-        <option value="Level Maximal">Maximal</option>
-
-      </select>
-      <div class="qty-controls">
-        <button onclick="updateQty('food', -1)">-</button>
-        <span id="foodQty">1</span>
-        <button onclick="updateQty('food', 1)">+</button>
-        <span id="foodSubtotal">0</span></span>
-      </div>
-      <textarea id="foodNote" placeholder="Catatan (opsional)"></textarea>
-      <button class="btn-orange" onclick="addToCart('food')">Masukkan Keranjang</button>
+  <!-- Notifikasi -->
+  <transition name="fade">
+    <div v-if="notif.message" :class="['fixed top-4 left-1/2 transform -translate-x-1/2 z-50 px-4 py-2 rounded shadow text-white', notif.type === 'error' ? 'bg-red-500' : 'bg-green-500']">
+      {{ notif.message }}
     </div>
+  </transition>
 
-    <!-- Minuman -->
-    <div class="card">
-      <h3>Minuman</h3>
-      <select id="drinkSelect">
-        <option value="">Pilih Menu</option>
-        <option value="Milkshake VANILA Original-13000">Milkshake VANILA Original - 13.000</option>
-        <option value="Milkshake VANILA LATE -13000">Milkshake VANILA LATE- 13.000</option>
-        <option value="Milkshake CHOCO CARAMEL -13000">Milkshake CHOCO CARAMEL- 13.000</option>
-        <option value="Milkshake CHOCO OREO -13000">Milkshake CHOCO OREO - 13.000</option>
-        <option value="Milkshake MANGGA -13000">Milkshake MANGGA- 13.000</option>
-         <option value="Milkshake TARO -13000">Milkshake TARO- 13.000</option>
-         <option value="Milkshake TIRAMISU -13000">Milkshake TIRAMISU- 13.000</option>
-         <option value="Milkshake CAPOUCINO -13000">Milkshake CAPPUCINO- 13.000</option>
-         <option value="LEMONTEA JUMBO -10000">LEMONTEA JUMBO- 10.000</option>
-      </select>
-
-
-      <select id="drinkExtra" multiple>
-        <option value="Pakai BOBA-0">Pakai BOBA - 0</option>
-        <option value="Tanpa BOBA-0">Tanpa BOBA -0</option>
-        
-      </select>
-      <select id="drinkOption">
-        <option value="">Pilih Opsi</option>
-        <option value="Dingin ">Dingin</option>
-        <option value="Hangat (Khusus Lemontea saja)">Hangat (Khusus Lemontea saja)</option>
-      </select>
-      <div class="qty-controls">
-        <button onclick="updateQty('drink', -1)">-</button>
-        <span id="drinkQty">1</span>
-        <button onclick="updateQty('drink', 1)">+</button>
-        <span id="drinkSubtotal">0</span></span>
-      </div>
-      <textarea id="drinkNote" placeholder="Catatan (opsional)"></textarea>
-      <button class="btn-orange" onclick="addToCart('drink')">Masukkan Keranjang</button>
+  <!-- Overlay jika toko tutup -->
+  <div v-if="!isOpen" class="absolute inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center z-50">
+    <div class="text-center">
+      <h1 class="text-white text-4xl font-bold mb-2">Toko sedang tutup</h1>
+      <p class="text-white">Jam operasional: 00:01 - 21:00</p>
+<p class="text-white">Hari buka: Senin - minggu</p>
     </div>
   </div>
 
-  <!-- Keranjang -->
-  <div class="cart">
-    <h3>Keranjang</h3>
-    <div id="cartList"></div>
-    <div>Total Pesanan: <span id="cartTotal">0</span></div>
+  <!-- Judul -->
+  <h1 class="text-2xl font-bold mb-4">WARUNG SUTAN <span class="ml-2 text-green-600" v-if="isOpen">BUKA JAM 11:00-21:00</span></h1>
 
-    <select id="lokasiAntar" onchange="updateOngkir()">
+  <!-- Makanan -->
+  <h2 class="text-xl font-semibold mb-2">Makanan</h2>
+  <div class="grid grid-cols-2 gap-4 mb-4">
+    <div v-for="item in makanan" :key="item.nama" class="border rounded-lg p-2 shadow">
+      <img :src="item.gambar" alt="menu" class="w-full h-32 object-cover rounded" />
+      <h3 class="font-bold">{{ item.nama }}</h3>
+      <p class="text-sm text-gray-600">Rp{{ item.harga }}</p>
+      <label class="block mt-1 text-sm">Topping <span class="text-red-500">*</span>:</label>
+      <select v-model="item.toppingDipilih" multiple class="w-full border rounded p-1 text-sm">
+        <option v-for="top in item.topping" :value="top">{{ top.nama }} - Rp{{ top.harga }}</option>
+      </select>
+      <div class="flex justify-between items-center mt-2">
+        <div class="flex items-center space-x-2">
+          <button @click="kurangQty(item)" class="px-2 bg-gray-200">-</button>
+          <span>{{ item.qty }}</span>
+          <button @click="tambahQty(item)" class="px-2 bg-gray-200">+</button>
+        </div>
+        <span class="text-sm font-bold">Rp{{ getHargaItem(item).toLocaleString() }}</span>
+      </div>
+      <label class="block text-sm mt-1">Catatan (opsional):</label>
+      <textarea v-model="item.catatan" rows="2" class="w-full border rounded p-1 text-sm" placeholder="Tanpa sambal, pedas, dll"></textarea>
+      <button @click="masukkanKeranjang(item)" class="mt-2 bg-green-500 text-white px-2 py-1 rounded text-sm w-full">Masukkan ke Keranjang</button>
+      <p v-if="item.error" class="text-red-500 text-xs mt-1">{{ item.error }}</p>
+    </div>
+  </div>
 
-      <option value="">Pilih Lokasi Antar</option>
+  <!-- Minuman -->
+  <h2 class="text-xl font-semibold mb-2">Minuman</h2>
+  <div class="grid grid-cols-2 gap-4 mb-4">
+    <div v-for="item in minuman" :key="item.nama" class="border rounded-lg p-2 shadow">
+      <img :src="item.gambar" alt="menu" class="w-full h-32 object-cover rounded" />
+      <h3 class="font-bold">{{ item.nama }}</h3>
+      <p class="text-sm text-gray-600">Rp{{ item.harga }}</p>
+      <label class="block text-sm mt-1">Opsi <span class="text-red-500">*</span>:</label>
+      <select v-model="item.opsiDipilih" class="w-full border rounded p-1 text-sm">
+        <option disabled value="">Pilih Opsi</option>
+        <option v-for="opsi in item.opsi" :value="opsi">{{ opsi }}</option>
+      </select>
+      <div class="flex justify-between items-center mt-2">
+        <div class="flex items-center space-x-2">
+          <button @click="kurangQty(item)" class="px-2 bg-gray-200">-</button>
+          <span>{{ item.qty }}</span>
+          <button @click="tambahQty(item)" class="px-2 bg-gray-200">+</button>
+        </div>
+        <span class="text-sm font-bold">Rp{{ (item.harga * item.qty).toLocaleString() }}</span>
+      </div>
+      <label class="block text-sm mt-1">Catatan (opsional):</label>
+      <textarea v-model="item.catatan" rows="2" class="w-full border rounded p-1 text-sm" placeholder="Tanpa es, kurang manis, dll"></textarea>
+      <button @click="masukkanKeranjang(item)" class="mt-2 bg-green-500 text-white px-2 py-1 rounded text-sm w-full">Masukkan ke Keranjang</button>
+      <p v-if="item.error" class="text-red-500 text-xs mt-1">{{ item.error }}</p>
+    </div>
+  </div>
 
-      <option value="Kilometer.0 -15000">Kilometer-0 - 15.000</option>
+ <!-- Keranjang -->
+  <div class="mt-4">
+    <h2 class="text-xl font-semibold mb-2">Keranjang</h2>
+    <ul>
+      <li v-for="(item, index) in keranjang" :key="index" class="border-b py-2">
+        <p class="font-bold">{{ item.nama }} x{{ item.qty }}</p>
 
-      <option value="Kilometer.1 -14000">Kilometer-1 - 14.000</option>
-
-      <option value="Kilometer.2 -12000">Kilometer-2 - 12.000</option>
-
-      <option value="Kilometer.3 -11000">Kilometer-3 - 11.000</option>
-
-      <option value="Kilometer.4 -10000">Kilometer-4 - 10.000</option>
-
-      <option value="Mapaddegat Bawah -10000">Mapaddegat Bawah - 10.000</option>
-
-       <option value="Kilometer.5 -8000">Kilometer-5 - 8.000</option>
-
-      <option value="Kilometer.6 -7000">Kilometer-6 - 7.000</option>
-
-      <option value="SP2 Setelah Perusda dst -8000">SP2 Setelah Perusda dst - 8.000</option>
-
-      <option value="Kilometer.7 -6000">Kilometer-7 - 6.000</option>
-
-      <option value="Kilometer.8 -6000">Kilometer-8 - 6.000</option>
-
-      <option value="Kilometer.9 -6000">Kilometer-9 - 6.000</option>
-
-      <option value="Kilometer.10 & SP3 Sekitarnya - 7000">Kilometer-10 & SP3 Sekitarnya - 7.000</option>
+        <p v-if="item.topping.length">Topping: {{ item.topping.map(t => t.nama).join(', ') }}</p>
+        <p v-if="item.opsi">Opsi: {{ item.opsi }}</p>
+<p class="text-sm text-gray-700">Subtotal: Rp{{ getHargaItem(item).toLocaleString() }}</p>
+        <p v-if="item.catatan">Catatan: {{ item.catatan }}</p>
+        <button @click="hapusItem(index)" class="text-red-500 text-sm mt-1">Hapus</button>
+      </li>
+    </ul>
+    <p class="mt-2 font-semibold">Total: Rp{{ totalPesanan.toLocaleString() }}</p>
+    <label class="block mt-2">Lokasi Antar <span class="text-red-500">*</span>:</label>
+    <select v-model="lokasiDipilih" class="border p-1 rounded w-full">
+      <option disabled value="">Pilih Lokasi</option>
+      <option v-for="lok in lokasiAntar" :value="lok">{{ lok.nama }} - Rp{{ lok.ongkir }}</option>
     </select>
-    <div>Total + Ongkir: <span id="totalPlusOngkir">0</span></div>
-    <textarea id="alamatDetail" class="alamat-detail" placeholder="detail alamat wajib di isi..."></textarea>
-    <button class="btn-kirim" onclick="checkout()">
-  KIRIM ORDERAN KE WHATSAPP ADMIN
-</button>
-  <script>
-    let cart = [];
-    let ongkir = 0;
-    const prices = {"Tanpa Topping": 0, "Telur Matasapi": 4000, "Telur Dadar": 4000, "Sosis": 4000, "Bakso": 4000,};
-
-    function showNotif(msg) {
-      const el = document.getElementById("notif");
-      el.textContent = msg;
-      el.classList.add("show");
-      setTimeout(() => el.classList.remove("show"), 3000);
+    <label class="block mt-2">Alamat Lengkap <span class="text-red-500">*</span>:</label>
+    <textarea v-model="alamatLengkap" class="border rounded w-full p-2" rows="2" placeholder="Contoh: Gg Mawar No 17, pagar hijau, atas nama Budi"></textarea>
+    <p class="mt-2 font-bold">Total + Ongkir: Rp{{ (totalPesanan + (lokasiDipilih ? lokasiDipilih.ongkir : 0)).toLocaleString() }}</p>
+    <button :disabled="!bisaCheckout" @click="checkout" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50 w-full">
+      Kirim ke WhatsApp Admin
+    </button>
+  </div>
+</div>
+<script>
+new Vue({
+  el: '#app',
+  data: {
+    makanan: [],
+    minuman: [],
+    keranjang: [],
+    lokasiAntar: [
+      { nama: 'KM 0', ongkir: 13000 }, { nama: 'KM 2', ongkir: 11000 },
+      { nama: 'KM 3', ongkir: 10000 }, { nama: 'KM 4', ongkir: 9000 },
+      { nama: 'Mapaddegat bagian Bawah dst', ongkir: 10000 }, { nama: 'KM 5', ongkir: 8000 },
+      { nama: 'KM 6', ongkir: 7000 }, { nama: 'KM 7', ongkir: 6000 },
+      { nama: 'KM 8', ongkir: 5000 }, { nama: 'KM 9', ongkir: 5000 },
+      { nama: 'KM 10', ongkir: 6000 }, { nama: 'SP2 Blok M dst ', ongkir: 7000 }
+    ],
+    lokasiDipilih: null,
+    alamatLengkap: '',
+    isOpen: false,
+    notif: { message: '', type: '' }
+  },
+  computed: {
+    totalPesanan() {
+      return this.keranjang.reduce((acc, item) => {
+        const toppingTotal = item.topping.reduce((sum, t) => sum + t.harga, 0);
+        return acc + (item.harga + toppingTotal) * item.qty;
+      }, 0);
+    },
+    bisaCheckout() {
+      return this.keranjang.length > 0 && this.lokasiDipilih && this.alamatLengkap.trim() !== '';
     }
+  },
+  created() {
+    const jam = new Date().getHours();
+    this.isOpen = jam >= 0 && jam < 21;
 
-    function updateStatus() {
-      const jam = new Date().getHours();
-      const buka = (jam >= 00 && jam < 24);
-      const statusEl = document.getElementById("statusBar");
-      statusEl.textContent = buka ? "BUKA" : "TUTUP";
-      statusEl.style.background = buka ? "green" : "#dc3545";
-
-      const semuaTombol = document.querySelectorAll("button");
-      semuaTombol.forEach(btn => {
-        btn.disabled = !buka;
-        btn.style.opacity = buka ? "1" : "0.5";
-        btn.style.cursor = buka ? "pointer" : "not-allowed";
-      });
-    }
-
-    function updateQty(type, delta) {
-      const qtyEl = document.getElementById(`${type}Qty`);
-      let qty = parseInt(qtyEl.textContent) + delta;
-      qty = Math.max(1, qty);
-      qtyEl.textContent = qty;
-      updateSubtotal(type);
-    }
-
-    function updateSubtotal(type) {
-      const select = document.getElementById(`${type}Select`).value;
-      if (!select) return;
-      const [_, price] = select.split("-");
-      const qty = parseInt(document.getElementById(`${type}Qty`).textContent);
-      const extras = Array.from(document.getElementById(`${type}Extra`).selectedOptions).map(opt => opt.value.split("-")[0]);
-      let totalExtra = extras.reduce((sum, ex) => sum + (prices[ex] || 0), 0);
-      const subtotal = (parseInt(price) + totalExtra) * qty;
-      document.getElementById(`${type}Subtotal`).textContent = subtotal;
-    }
-
-    document.querySelectorAll("select").forEach(el => el.addEventListener("change", () => {
-      if (el.id.includes("Select") || el.id.includes("Extra")) {
-        const type = el.id.includes("food") ? "food" : "drink";
-        updateSubtotal(type);
-      }
+    const gambarMakanan = [
+      'https://i.ibb.co.com/KccY6t5Y/Properti-Sifood-20250507-215020-0000.jpg',
+      'https://linkgambar.com/mie2.jpg',
+      'https://linkgambar.com/mie3.jpg',
+      'https://i.ibb.co.com/KccY6t5Y/Properti-Sifood-20250507-215020-0000.jpg'
+    ];
+    const topping = [
+      { nama: 'Telur Matasapi', harga: 4000 },
+      { nama: 'Telur Dadar', harga: 4000 },
+      { nama: 'Sosis', harga: 4000 },
+      { nama: 'Bakso', harga: 4000 }
+    ];
+    const opsi = ['pakai Boba', 'Tanpa Boba'];
+    this.makanan = [
+      'Mie pedas dower Original',
+      'Mie pedas dower level Selow',
+      'Mie pedas dower level lumayan',
+      'Mie pedas dower level maximal'
+    ].map((nama, i) => ({
+      nama,
+      harga: 12000,
+      gambar: gambarMakanan[i],
+      topping,
+      toppingDipilih: [],
+      qty: 1,
+      catatan: '',
+      error: ''
     }));
-
-    function addToCart(type) {
-      const select = document.getElementById(`${type}Select`).value;
-      const option = document.getElementById(`${type}Option`).value;
-      const extras = Array.from(document.getElementById(`${type}Extra`).selectedOptions).map(opt => opt.value.split("-")[0]);
-      if (!select) return showNotif("Pilih menu terlebih dahulu.");
-      if (extras.length === 0) return showNotif("Pilih minimal satu extra.");
-      if (!option) return showNotif("Pilih level Pedas.");
-
-      const [name, price] = select.split("-");
-      const qty = parseInt(document.getElementById(`${type}Qty`).textContent);
-      const note = document.getElementById(`${type}Note`).value;
-      const extraTotal = extras.reduce((sum, code) => sum + (prices[code] || 0), 0);
-      const subtotal = (parseInt(price) + extraTotal) * qty;
-
-      const exists = cart.some(item =>
-        item.name === name && item.option === option &&
-        item.extras.length === extras.length &&
-        item.extras.every((v, i) => v === extras[i])
-      );
-      if (exists) return showNotif("Item sudah ada di keranjang.");
-
-      cart.push({ name, qty, option, extras, note, subtotal });
-      showNotif("Berhasil ditambahkan ke keranjang.");
-      renderCart();
-    }
-
-    function renderCart() {
-      const list = document.getElementById("cartList");
-      list.innerHTML = "";
-      let total = 0;
-      cart.forEach((item, i) => {
-        total += item.subtotal;
-        list.innerHTML += `
-          <div class="cart-item">
-            ${item.name} (${item.qty}x) - ${item.subtotal}<br>
-            Extra: ${item.extras.join(", ")}<br>
-            Opsi: ${item.option}<br>
-            Catatan: ${item.note}<br>
-            <button onclick="removeCart(${i})">Hapus</button>
-          </div>
-        `;
+    const gambarMinuman = [
+      'https://linkgambar.com/caramel.jpg',
+      'https://linkgambar.com/taro.jpg',
+      'https://linkgambar.com/vanila.jpg',
+      'https://linkgambar.com/vanila-latte.jpg',
+      'https://i.ibb.co.com/KccY6t5Y/Properti-Sifood-20250507-215020-0000.jpg',
+      'https://linkgambar.com/mangga.jpg',
+      'https://linkgambar.com/lemontea.jpg'
+    ];
+    this.minuman = [
+      'Milkshake Boba Caramel',
+      'Milkshake Boba Taro',
+      'Milkshake Boba vanila',
+      'Milkshake Boba vanila late',
+      'Milkshake Boba cappucino',
+      'Milkshake Boba Mangga',
+      'Lemon Tea'
+    ].map((nama, i) => ({
+      nama,
+      harga: nama === 'Lemon Tea' ? 10000 : 13000,
+      gambar: gambarMinuman[i],
+      opsi: nama === 'Lemon Tea' ? ['Dingin', 'Hangat'] : opsi,
+      opsiDipilih: '',
+      qty: 1,
+      catatan: '',
+      error: ''
+    }));
+  },
+  methods: {
+    tambahQty(item) { item.qty++; },
+    kurangQty(item) { if (item.qty > 1) item.qty--; },
+    getHargaItem(item) {
+  const topping = item.toppingDipilih || item.topping || [];
+  const toppingTotal = topping.reduce((sum, t) => sum + t.harga, 0);
+  return (item.harga + toppingTotal) * item.qty;
+},
+    showNotif(message, type = 'success') {
+      this.notif = { message, type };
+      setTimeout(() => { this.notif.message = ''; }, 3000);
+    },
+    masukkanKeranjang(item) {
+      item.error = '';
+      if ((item.topping && item.toppingDipilih.length === 0) || (item.opsi && !item.opsiDipilih)) {
+        item.error = 'Wajib pilih topping atau opsi';
+        this.showNotif(item.error, 'error');
+        return;
+      }
+      const toppingNama = item.toppingDipilih?.map(t => t.nama).sort().join(',') || '';
+      const opsi = item.opsiDipilih || '';
+      const itemKey = `${item.nama}|${toppingNama}|${opsi}`;
+      const sudahAda = this.keranjang.some(i => {
+        const key = `${i.nama}|${i.topping.map(t => t.nama).sort().join(',')}|${i.opsi || ''}`;
+        return key === itemKey;
       });
-      document.getElementById("cartTotal").textContent = total;
-      updateTotalOngkir();
-    }
-
-    function removeCart(i) {
-      cart.splice(i, 1);
-      renderCart();
-    }
-
-    function updateOngkir() {
-      const val = document.getElementById("lokasiAntar").value;
-      if (!val) return;
-      const [_, biaya] = val.split("-");
-      ongkir = parseInt(biaya);
-      updateTotalOngkir();
-    }
-
-    function updateTotalOngkir() {
-      const total = parseInt(document.getElementById("cartTotal").textContent);
-      document.getElementById("totalPlusOngkir").textContent = total + ongkir;
-    }
-
-    function checkout() {
-      const lokasi = document.getElementById("lokasiAntar").value;
-      const alamat = document.getElementById("alamatDetail").value.trim();
-      if (!cart.length) return showNotif("Keranjang kosong.");
-      if (!lokasi) return showNotif("Pilih lokasi antar.");
-      if (!alamat) return showNotif("Isi alamat.");
-
-      const waktu = new Date().toLocaleString("id-ID");
-      let msg = `*Halo Admin.... Tolong proses Orderan Saya di WARUNG SUTAN*%0A Waktu: ${waktu}%0A%0A`;
-
-      cart.forEach((item, i) => {
-        msg += `${i+1}. ${item.name}%0A`;
-        msg += `Qty: ${item.qty}%0A`;
-        if (item.extras.length) msg += `Extra: ${item.extras.join(", ")}%0A`;
-        if (item.option) msg += `Opsi: ${item.option}%0A`;
-        if (item.note) msg += `Catatan: ${item.note}%0A`;
-        msg += `Subtotal: ${item.subtotal.toLocaleString("id-ID")}%0A%0A`;
+      if (sudahAda) {
+        item.error = 'Menu dengan pilihan ini sudah ada di keranjang';
+        this.showNotif(item.error, 'error');
+        return;
+      }
+      this.keranjang.push({
+        nama: item.nama,
+        qty: item.qty,
+        harga: item.harga,
+        topping: item.toppingDipilih ? JSON.parse(JSON.stringify(item.toppingDipilih)) : [],
+        opsi,
+        catatan: item.catatan.trim()
       });
-
-      msg += `-----------------------------%0A`;
-      const total = parseInt(document.getElementById("cartTotal").textContent);
-      const lokasiTxt = lokasi.split("-")[0];
-      msg += `Total: ${total.toLocaleString("id-ID")}%0A`;
-      msg += `Ongkir (${lokasiTxt}): ${ongkir.toLocaleString("id-ID")}%0A`;
-      msg += `*Total Bayar: ${(total + ongkir).toLocaleString("id-ID")}*%0A%0A`;
-      msg += `*Detail Alamat: ${alamat}*`;
-      msg += `------------------------------%0A`;
-      msg += `Terima Kasih Telah Belanja di  Sifood. Mau Belanja di Warung Lainnya? klik: https://makmur-hidayat.github.io/Sifood-Home/ . Stanbay Hapenya yah, Kurir Akan Hubungi Kamu`;
-
-      const waLink = `https://wa.me/6285266610522?text=${msg}`;
-      window.open(waLink, '_blank');
+      item.qty = 1;
+      if (item.topping) item.toppingDipilih = [];
+      if (item.opsi) item.opsiDipilih = '';
+      item.catatan = '';
+      this.showNotif('Item berhasil dimasukkan ke keranjang');
+    },
+    hapusItem(index) {
+      this.keranjang.splice(index, 1);
+    },
+    checkout() {
+  if (!this.bisaCheckout) {
+    if (this.keranjang.length === 0) {
+      this.showNotif('Keranjang masih kosong!', 'error');
+    } else if (!this.lokasiDipilih) {
+      this.showNotif('Silakan pilih lokasi antar!', 'error');
+    } else if (this.alamatLengkap.trim() === '') {
+      this.showNotif('Silakan isi alamat lengkap!', 'error');
+    } else {
+      this.showNotif('Lengkapi semua data terlebih dahulu!', 'error');
     }
+    return;
+  }
 
-    updateStatus();
-    setInterval(updateStatus, 60000);
-  </script>
+  const now = new Date();
+  const waktu = `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
+  const pesan = `*Halo Admin... Proses Orderanku di WARUNG SUTAN:*%0A` +
+`*Waktu: ${waktu}*%0A%0A` +
+`====================%0A `+
+  this.keranjang.map(i => {
+    const toppingList = i.topping.length ? 'Topping: ' + i.topping.map(t => t.nama).join(', ') + '%0A' : '';
+    const opsiText = i.opsi ? 'Opsi: ' + i.opsi + '%0A' : '';
+    const catatanText = i.catatan ? 'Catatan: ' + i.catatan + '%0A' : '';
+    const subtotal = (i.harga + i.topping.reduce((sum, t) => sum + t.harga, 0)) * i.qty;
+    return `*${i.nama}* x ${i.qty} Porsi%0A${toppingList}${opsiText}${catatanText}Subtotal: Rp${subtotal.toLocaleString()}%0A`;
+  }).join('%0A') +
+`%0A====================%0A` +
+`*Total Harga:* Rp${this.totalPesanan.toLocaleString()}%0A` +
+`*Ongkir (${this.lokasiDipilih.nama}):* Rp${this.lokasiDipilih.ongkir.toLocaleString()}%0A` +
+`*Total Bayar:* Rp${(this.totalPesanan + this.lokasiDipilih.ongkir).toLocaleString()}%0A` +
+`*Alamat:* ${this.alamatLengkap}%0A%0A`+
+`Terima Kasih telah Belanja di *sifood.online* Hapenya Mohon Stanby yah`;
+
+  const nomorAdmin = '6285266610522';
+  const url = `https://wa.me/${nomorAdmin}?text=${pesan}`;
+  window.open(url, '_blank');
+    }
+  }
+});
+</script>
 </body>
 </html>
