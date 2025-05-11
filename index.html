@@ -43,7 +43,7 @@
     <div :class="{ blurred: !isOpen }" class="grid grid-cols-2 gap-4 mb-4">
       <div v-for="(item, index) in makanan" :key="index" class="bg-white rounded-lg shadow-md p-2"
         :class="{ 'opacity-50 pointer-events-none': !item.aktif }">
-        <img :src="item.gambar" alt="makanan" class="w-full h-24 object-cover rounded">
+        <img :src="item.gambar" alt="makanan" class="w-full h-32 object-contain rounded bg-white">
         <h3 class="font-bold mt-2">{{ item.nama }}</h3>
         <p class="text-sm text-gray-600 mb-1">Rp{{ item.harga.toLocaleString() }}</p>
 
