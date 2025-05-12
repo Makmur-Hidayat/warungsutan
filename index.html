@@ -92,7 +92,7 @@
     <div class="mb-2">
       <label class="block font-medium mb-1">Lokasi Antar:</label>
       <select v-model="lokasi" class="w-full border rounded p-2 text-sm">
-        <option disabled value="">-- Pilih Lokasi --</option>
+        <option disabled value="">-- 📍Pilih Lokasi --</option>
         <option v-for="(ongkir, lokasi) in lokasiOngkir" :value="lokasi">
           {{ lokasi }} - Rp{{ ongkir.toLocaleString() }}
         </option>
